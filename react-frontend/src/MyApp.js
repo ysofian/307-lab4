@@ -6,11 +6,23 @@ import axios from 'axios';
 function MyApp() {
   const [characters, setCharacters] = useState([]);
 
-  function removeOneCharacter (index) {
+  function removeOneCharacter (index, id) {
     const updated = characters.filter((character, i) => {
       return i !== index
     });
+    removeBackend(id);
     setCharacters(updated);
+  }
+
+  async function removeBackend(Id) {
+    try {
+      const response = await axios.delete('http://localhost:8000/users/'.concat(Id));
+      return response
+    }
+    catch(error) {
+      console.log(error);
+      return false;
+    }
   }
 
   async function fetchAll(){

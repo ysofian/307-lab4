@@ -41,10 +41,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-    res.send(users);
-});
-
-app.get('/users', (req, res) => {
     const name = req.query.name;
     if (name != undefined){
         let result = findUserByName(name);
@@ -74,12 +70,38 @@ app.post('/users', (req, res) => {
     res.status(201).send(req.body).end();
 });
 
+app.delete('/users/:id', (req, res) => {
+    const id = req.params['id'];
+    let result = findUserById(id);
+    if (result === undefined || result.length == 0)
+        res.status(404).send('Resource not found.');
+    else {
+        let index = 0;
+        for (let i = 0; i < users['users_list'].length; i++) {
+            if (users['users_list'][i].id == id) {
+                index = i;
+            }
+        }
+        delete users['users_list'][index];
+        users['users_list'] = users['users_list'].filter(myFilter);
+        res.status(204).end();
+    }
+});
+
+function myFilter(elm){
+    return (elm != null && elm !== false && elm !== "");
+}
+
 function randomId() {
     return Math.random().toString(36).substring(2, 8);
 };
 
 function addUser(user){
     users['users_list'].push(user);
+}
+
+function deleteUser(user) {
+    
 }
 
 function findUserById(id) {
