@@ -68,10 +68,10 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-    const userToAdd = req.body;
-    userToAdd.id = randomId();
-    addUser(userToAdd);
-    res.status(201).end();
+    let tempId = randomId()
+    req.body.id = tempId;
+    addUser(req.body);
+    res.status(201).send(req.body).end();
 });
 
 function randomId() {
